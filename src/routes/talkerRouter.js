@@ -3,7 +3,7 @@ const getTalkers = require('../helpers/getAllTalkers');
 
 const router = express.Router();
 
-router.get('/talker', async (req, res) => {
+router.get('/', async (req, res) => {
     const talker = await getTalkers.getAllTalkers();
     if (talker.lenght !== 0) {
         res.status(200).json({ talker }.talker);
@@ -12,7 +12,7 @@ router.get('/talker', async (req, res) => {
     }
   });
 
-router.get('/talker/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
 const talker = await getTalkers.getAllTalkers();
 const { id } = req.params;
 const filtered = talker.find((t) => t.id === Number(id));

@@ -1,13 +1,13 @@
 const express = require('express');
 
 const talkerRouter = require('./routes/talkerRouter');
-// const loginRouter = require('./routes/loginRouter');
+const loginRouter = require('./routes/loginRouter');
 
 const app = express();
 app.use(express.json());
 // confirm if it should be before or after the previous use.
-app.use(talkerRouter);
-// app.use(loginRouter);
+app.use('/talker', talkerRouter);
+app.use('/login', loginRouter);
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
