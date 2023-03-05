@@ -18,22 +18,39 @@ async function insertData(name, age, talk) {
     }
   }
 
-  async function insertJson(updateTalker) {
+async function insertJson(updateTalker) {
+try {
+    const talker = await getAllTalkers.getAllTalkers();
+    const index = (updateTalker.id - 1);
+    talker.splice(index, 1, updateTalker);
+// Replaces 1 element at index
+
+    await fs.writeFile(talkerPath, JSON.stringify(talker));
+    console.log(talker);
+    return talker;
+} catch (error) {
+    console.error(`File could not be written: ${error}`);
+}
+}
+
+async function deleteData(req, res) {
     try {
-      const talker = await getAllTalkers.getAllTalkers();
-      const index = (updateTalker.id - 1);
-      talker.splice(index, 1, updateTalker);
-    // Replaces 1 element at index
-   
-      await fs.writeFile(talkerPath, JSON.stringify(talker));
-      console.log(talker);
-      return talker;
+        const talkers = await getAllTalkers.getAllTalkers();
+        const { id } = req.params;
+
+        const arrayPosition = talkers.findIndex((talker) => talker.id === Number(id));
+        talkers.splice(arrayPosition, 1);
+
+        await fs.writeFile(talkerPath, JSON.stringify(talkers));
+
+        return res.status(204).end();
     } catch (error) {
-      console.error(`File could not be written: ${error}`);
+        console.error(`File could not be written: ${error}`);
     }
-  }
+}
 
 module.exports = {
     insertData,
     insertJson,
+    deleteData,
 };

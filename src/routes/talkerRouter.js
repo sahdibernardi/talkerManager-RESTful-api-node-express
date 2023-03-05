@@ -13,7 +13,7 @@ const {
     authRate } = require('../middlewares/authTalker');
 const { authToken } = require('../middlewares/authToken');
 const getTalkers = require('../middlewares/getAllTalkers');
-const { insertData, insertJson } = require('../middlewares/insertData');
+const { insertData, insertJson, deleteData } = require('../middlewares/insertData');
 
 const router = express.Router();
 
@@ -69,6 +69,10 @@ authRate, async (req, res) => {
     await insertJson(updateTalker);
 
     res.status(200).json({ updateTalker }.updateTalker);
+});
+
+router.delete('/:id', authToken, async (req, res) => {
+    await deleteData(req, res);
 });
   
 module.exports = router;
