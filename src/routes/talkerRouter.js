@@ -1,12 +1,19 @@
 const express = require('express');
+// const fs = require('fs');
+// const path = require('path');
+
+// const fileName = './talker.json';
+// const file = require('../talker.json');
+
 const {
     authName,
     authAge,
     authReqTalkerData,
     authWatchedAt,
-    authRate } = require('../helpers/authTalker');
-const { authToken } = require('../helpers/authToken');
-const getTalkers = require('../helpers/getAllTalkers');
+    authRate } = require('../middlewares/authTalker');
+const { authToken } = require('../middlewares/authToken');
+const getTalkers = require('../middlewares/getAllTalkers');
+const insertData = require('../middlewares/insertData');
 
 const router = express.Router();
 
@@ -34,13 +41,17 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', authToken, authName, authAge, authReqTalkerData, authWatchedAt,
 authRate, async (req, res) => {
-    const talker = await getTalkers.getAllTalkers();
-    const { name, age, talk: { watchedAt, rate } } = req.body;
-    const id = talker.length + 1;
-    const newTalker = { id, name, age, talk: { watchedAt, rate } };
-    talker.push(newTalker);
-
-    res.status(201).json(newTalker);
+    const { name, age, talk } = req.body;
+    const talkers = await insertData(name, age, talk);
+    const l = talkers.lenght;
+    let id = 5;
+    if (l !== undefined) {
+        id = talkers[l - 1];
+    }
+    const newTalker = { id, name, age, talk };
+    console.log(newTalker);
+    await console.log(talkers);
+    return res.status(201).json({ newTalker }.newTalker);
 });
   
 module.exports = router;

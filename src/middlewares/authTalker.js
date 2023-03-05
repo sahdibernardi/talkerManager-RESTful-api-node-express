@@ -24,7 +24,7 @@ const authAge = (req, res, next) => {
     next();
 };
 
-const authReqTalkerData = (req, res, _next) => {
+const authReqTalkerData = (req, res, next) => {
     const { talk } = req.body;
     if (!talk) {
         return res.status(400).json({ message: 'O campo "talk" é obrigatório' });
@@ -33,18 +33,18 @@ const authReqTalkerData = (req, res, _next) => {
     } if (!talk.rate && talk.rate !== 0) {
         return res.status(400).json({ message: 'O campo "rate" é obrigatório' });
     }
+    next();
 };
 
 const authWatchedAt = (req, res, next) => {
     const { talk } = req.body;
 
-    const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-    const date = new Date(talk.watchedAt);
+    const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
 
-     if (!`${talk.watchedAt}`.match(regex) && Number.isNaN(date.getTime())) {
-        return res.status(400).json({
-            message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"',
-        });
+    if (!dateRegex.test(talk.watchedAt)) {
+      return res.status(400).json({
+        message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"',
+      });
     }
     next();
 };

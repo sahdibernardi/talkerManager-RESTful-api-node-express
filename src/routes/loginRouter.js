@@ -1,6 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
-const { authRequired, authEmail, authPassword } = require('../helpers/authData');
+const { authRequired, authEmail, authPassword } = require('../middlewares/authData');
 
 const router = express.Router();
 
