@@ -12,6 +12,21 @@ const { insertData, insertJson, deleteData } = require('../middlewares/insertDat
 
 const router = express.Router();
 
+router.get('/search', authToken, async (req, res) => {
+    const searchTerm = req.query.q;
+
+    const talkers = await getTalkers.getAllTalkers();
+
+    if (!searchTerm) {
+      return res.status(200).json(talkers);
+    }
+
+    const filteredTalkers = talkers.filter((talker) =>
+      talker.name.includes(searchTerm));
+
+    return res.status(200).json(filteredTalkers);
+});
+
 router.get('/', async (req, res) => {
     const talker = await getTalkers.getAllTalkers();
     if (talker.lenght !== 0) {
@@ -65,12 +80,6 @@ authRate, async (req, res) => {
 
 router.delete('/:id', authToken, async (req, res) => {
     await deleteData(req, res);
-});
-
-router.get('/search', authToken, async (req, res) => {
-    console.log(req);
-    console.log(res);
-    // configure it
 });
   
 module.exports = router;
