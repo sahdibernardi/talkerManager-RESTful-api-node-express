@@ -13,7 +13,7 @@ const {
     authRate } = require('../middlewares/authTalker');
 const { authToken } = require('../middlewares/authToken');
 const getTalkers = require('../middlewares/getAllTalkers');
-const insertData = require('../middlewares/insertData');
+const { insertData, insertJson } = require('../middlewares/insertData');
 
 const router = express.Router();
 
@@ -49,9 +49,27 @@ authRate, async (req, res) => {
         id = talkers[l - 1];
     }
     const newTalker = { id, name, age, talk };
-    console.log(newTalker);
-    await console.log(talkers);
+
     return res.status(201).json({ newTalker }.newTalker);
+});
+
+router.put('/:id', authToken, authName, authAge, authReqTalkerData, authWatchedAt,
+authRate, async (req, res) => {
+    const talkers = await getTalkers.getAllTalkers();
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    const updateTalker = await talkers.find((talker) => talker.id === Number(id));
+    if (!updateTalker) {
+        res.status(404).json({ message: 'This id do not match any of our talkers' });
+    }
+    updateTalker.name = name;
+    updateTalker.age = age;
+    updateTalker.talk = talk;
+
+    await insertJson(updateTalker);
+
+    res.status(200).json({ updateTalker }.updateTalker);
+
 });
   
 module.exports = router;
