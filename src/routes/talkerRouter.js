@@ -69,7 +69,6 @@ authRate, async (req, res) => {
     await insertJson(updateTalker);
 
     res.status(200).json({ updateTalker }.updateTalker);
-
 });
   
 module.exports = router;
