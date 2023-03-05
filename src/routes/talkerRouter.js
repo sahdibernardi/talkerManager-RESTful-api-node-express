@@ -1,9 +1,4 @@
 const express = require('express');
-// const fs = require('fs');
-// const path = require('path');
-
-// const fileName = './talker.json';
-// const file = require('../talker.json');
 
 const {
     authName,
@@ -41,13 +36,10 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', authToken, authName, authAge, authReqTalkerData, authWatchedAt,
 authRate, async (req, res) => {
+    const talkers = await getTalkers.getAllTalkers();
     const { name, age, talk } = req.body;
-    const talkers = await insertData(name, age, talk);
-    const l = talkers.lenght;
-    let id = 5;
-    if (l !== undefined) {
-        id = talkers[l - 1];
-    }
+    await insertData(name, age, talk);
+    const id = talkers.length + 1;
     const newTalker = { id, name, age, talk };
 
     return res.status(201).json({ newTalker }.newTalker);
@@ -73,6 +65,12 @@ authRate, async (req, res) => {
 
 router.delete('/:id', authToken, async (req, res) => {
     await deleteData(req, res);
+});
+
+router.get('/search', authToken, async (req, res) => {
+    console.log(req);
+    console.log(res);
+    // configure it
 });
   
 module.exports = router;
